@@ -1,10 +1,12 @@
 import { IProduct } from '../interfaces/IProduct';
 
 export default class Product implements IProduct {
+  id: number;
   name: string;
   private _amount: number = 0;
 
-  constructor(name: string, amount: number) {
+  constructor(id: number, name: string, amount: number) {
+    this.id = id;
     this.name = name;
     this.amount = amount;
   }
