@@ -113,5 +113,15 @@ describe('Cart - Model', () => {
       expect(cart.grossAmount).to.be.eq(13.93);
       expect(cart.netAmount).to.be.eq(9.93);
     });
+
+    it('gross and net amount are equal without any promotions', () => {
+      const cart = new Cart();
+      cart.scan(pizza);
+      cart.scan(currySauce);
+      cart.scan(pizza);
+
+      expect(cart.grossAmount).to.be.eq(13.93);
+      expect(cart.netAmount).to.be.eq(13.93);
+    });
   });
 });
