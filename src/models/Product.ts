@@ -1,4 +1,4 @@
-import { IProduct } from '../interfaces/IProduct';
+import IProduct from '../interfaces/IProduct';
 
 export default class Product implements IProduct {
   id: number;
