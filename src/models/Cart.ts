@@ -43,6 +43,7 @@ export default class Cart extends ACart {
     products.push(product);
     this.basket.set(product.id, products);
     this.calculateGrossAmount();
+    this.applyPromotionOnProducts();
     this.applyPercentagePromotion();
   }
 
@@ -52,6 +53,26 @@ export default class Cart extends ACart {
       let sum = products.reduce((acc, product) => acc + product.amount, 0);
       this._grossAmount += sum;
     });
+    this._netAmount = this._grossAmount;
+  }
+
+  private applyPromotionOnProducts(): void {
+    let calculateDiscount = 0;
+    const productPromos = this.promotionsMap.get(PromotionType.PRODUCT_DISCOUNT);
+    if (productPromos) {
+      Object.keys(productPromos).forEach((productId) => {
+        const products = this.basket.get(Number(productId)) ?? [];
+        if (products.length) {
+          const productPromo: IPromotion = productPromos[products[0].id];
+          if (productPromo.quantity && products.length >= productPromo.quantity) {
+            const discount = (productPromo.discountAmount ?? 0) * products.length;
+            calculateDiscount += discount;
+          }
+        }
+      });
+    }
+
+    this._netAmount = Number((this._netAmount - calculateDiscount).toFixed(2));
   }
 
   private applyPercentagePromotion() {
@@ -63,16 +84,16 @@ export default class Cart extends ACart {
     // apply max promotion for the customer.
     let maxDiscount = Number.MIN_SAFE_INTEGER;
     promotions.forEach((promotion: IPromotion) => {
-      const promotionMaxDiscount = promotion.maxDiscount;
-      if (this._grossAmount >= promotion.minBillAmount!) {
-        const discount = (this._grossAmount * promotion.percentageDiscount!) / 100;
+      const promotionMaxDiscount = promotion.maxDiscountAmount;
+      if (this._netAmount >= promotion.minBillAmount!) {
+        const discount = (this._netAmount * promotion.percentageDiscount!) / 100;
         maxDiscount = Math.max(discount, maxDiscount);
         if (promotionMaxDiscount && maxDiscount > promotionMaxDiscount) {
           maxDiscount = Math.min(maxDiscount, promotionMaxDiscount);
         }
       }
     });
-    this._netAmount = Number((this._grossAmount - maxDiscount).toFixed(2));
+    this._netAmount = Number((this._netAmount - maxDiscount).toFixed(2));
   }
 
   private isInstanceOfProduct(data: any): data is IProduct {

@@ -58,7 +58,7 @@ describe('Cart - Model', () => {
       promoOne.promotionType = PromotionType.PERCENTAGE;
       promoOne.percentageDiscount = 10;
       promoOne.minBillAmount = 30;
-      promoOne.maxDiscount = 5;
+      promoOne.maxDiscountAmount = 5;
 
       const promoTwo = new Promotion();
       promoTwo.productId = pizza.id;
@@ -73,6 +73,45 @@ describe('Cart - Model', () => {
 
       expect(cart.grossAmount).to.be.eq(32.94);
       expect(cart.netAmount).to.be.eq(29.65);
+    });
+
+    it('reduces pizza price & bill due to promotion', () => {
+      const pizzaPromo = new Promotion();
+      pizzaPromo.promotionType = PromotionType.PRODUCT_DISCOUNT;
+      pizzaPromo.productId = pizza.id;
+      pizzaPromo.quantity = 2;
+      pizzaPromo.discountAmount = 2;
+
+      const promoOne = new Promotion();
+      promoOne.promotionType = PromotionType.PERCENTAGE;
+      promoOne.percentageDiscount = 10;
+      promoOne.minBillAmount = 30;
+      promoOne.maxDiscountAmount = 5;
+
+      const cart = new Cart([pizzaPromo, promoOne]);
+      cart.scan(pizza);
+      cart.scan(currySauce);
+      cart.scan(pizza);
+      cart.scan(menShirt);
+
+      expect(cart.grossAmount).to.be.eq(38.93);
+      expect(cart.netAmount).to.be.eq(31.44);
+    });
+
+    it('reduces pizza price  due to promotion', () => {
+      const pizzaPromo = new Promotion();
+      pizzaPromo.promotionType = PromotionType.PRODUCT_DISCOUNT;
+      pizzaPromo.productId = pizza.id;
+      pizzaPromo.quantity = 2;
+      pizzaPromo.discountAmount = 2;
+
+      const cart = new Cart([pizzaPromo]);
+      cart.scan(pizza);
+      cart.scan(currySauce);
+      cart.scan(pizza);
+
+      expect(cart.grossAmount).to.be.eq(13.93);
+      expect(cart.netAmount).to.be.eq(9.93);
     });
   });
 });

@@ -6,8 +6,9 @@ export default class Promotion implements IPromotion {
 
   private _percentageDiscount?: number;
   private _minBillAmount?: number;
-  private _maxDiscount?: number;
+  private _maxDiscountAmount?: number;
   private _quantity?: number;
+  private _discountAmount?: number;
 
   constructor() {
     this.promotionType = PromotionType.NONE;
@@ -31,13 +32,22 @@ export default class Promotion implements IPromotion {
     return this._minBillAmount;
   }
 
-  public set maxDiscount(value: number | undefined) {
+  public set maxDiscountAmount(value: number | undefined) {
     if (value && value < 0) throw new Error('Maximum discount amount cannot be negative');
-    this._maxDiscount = value;
+    this._maxDiscountAmount = value;
   }
 
-  public get maxDiscount(): number | undefined {
-    return this._maxDiscount;
+  public get maxDiscountAmount(): number | undefined {
+    return this._maxDiscountAmount;
+  }
+
+  public set discountAmount(value: number | undefined) {
+    if (value && value < 0) throw new Error('Discount amount cannot be negative');
+    this._discountAmount = value;
+  }
+
+  public get discountAmount(): number | undefined {
+    return this._discountAmount;
   }
 
   public set quantity(value: number | undefined) {

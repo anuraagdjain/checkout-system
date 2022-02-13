@@ -8,7 +8,8 @@ export default interface IPromotion {
   promotionType: PromotionType;
   quantity?: number;
   minBillAmount?: number;
-  maxDiscount?: number;
+  maxDiscountAmount?: number;
   productId?: number;
   percentageDiscount?: number;
+  discountAmount?: number;
 }

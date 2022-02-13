@@ -8,7 +8,7 @@ describe('Promotion Model', function () {
     expect(promotion.promotionType).to.be.eq(PromotionType.NONE);
     expect(promotion.quantity).to.be.eq(undefined);
     expect(promotion.percentageDiscount).to.be.eq(undefined);
-    expect(promotion.maxDiscount).to.be.eq(undefined);
+    expect(promotion.maxDiscountAmount ).to.be.eq(undefined);
     expect(promotion.minBillAmount).to.be.eq(undefined);
     expect(promotion.productId).to.be.eq(undefined);
   });
@@ -33,7 +33,7 @@ describe('Promotion Model', function () {
   it('throws error when maxDiscount is negative', function () {
     const promotion = new Promotion();
     try {
-      promotion.maxDiscount = -5;
+      promotion.maxDiscountAmount = -5;
       expect.fail('Negative maxDiscount is not allowed');
     } catch (error: any) {
       expect(error.message).to.be.eq('Maximum discount amount cannot be negative');
